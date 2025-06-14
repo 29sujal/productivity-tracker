@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-const BACKEND_URL = 'http://localhost:5000';
+const BACKEND_URL = 'https://productivity-tracker-2jkn.onrender.com';
+
 
 function App() {
   const [tab, setTab] = useState('block');

@@ -1,3 +1,5 @@
+const BACKEND_BASE_URL = 'https://productivity-tracker-2jkn.onrender.com'; // replace with your actual Render URL
+
 const RULE_ID_BASE = 10000;
 
 function normalizeSite(site) {
@@ -10,7 +12,7 @@ function normalizeSite(site) {
 
 async function updateBlockingRules() {
   try {
-    const response = await fetch('http://localhost:5000/api/blocked');
+    const response = await fetch(`${BACKEND_BASE_URL}/api/blocked`);
     const data = await response.json();
 
     const uniqueSites = [...new Set(data.map(entry => normalizeSite(entry.site)))];
@@ -48,12 +50,12 @@ chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
   ) {
     updateBlockingRules();
     sendResponse({ success: true });
-    return true; // ✅ Needed to keep listener alive for async
+    return true;
   }
 
   if (msg?.type === 'TRACK_USAGE') {
     const { url, duration } = msg.payload;
-    fetch('http://localhost:5000/api/track', {
+    fetch(`${BACKEND_BASE_URL}/api/track`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url, duration })
@@ -67,6 +69,6 @@ chrome.runtime.onMessage.addListener((msg, _, sendResponse) => {
         sendResponse({ success: false, error: err.toString() });
       });
 
-    return true; // ✅ CRUCIAL: ensures Chrome waits for sendResponse
+    return true;
   }
 });
